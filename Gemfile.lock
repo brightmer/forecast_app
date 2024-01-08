@@ -107,6 +107,7 @@ GEM
     drb (2.2.0)
       ruby2_keywords
     erubi (1.12.0)
+    geocoder (1.8.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.1)
@@ -252,6 +253,7 @@ DEPENDENCIES
   capybara
   cssbundling-rails
   debug
+  geocoder
   importmap-rails
   jbuilder
   mysql2 (~> 0.5)
