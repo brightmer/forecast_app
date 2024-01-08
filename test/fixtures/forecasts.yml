@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  weather_location: one
+  forecast_at: 2024-01-08 10:23:48
+  weather_description: MyString
+  weather_icon: MyString
+  current_temperature: 1.5
+  high_temperature: 1.5
+  low_temperature: 1.5
+  units: MyString
+
+two:
+  weather_location: two
+  forecast_at: 2024-01-08 10:23:48
+  weather_description: MyString
+  weather_icon: MyString
+  current_temperature: 1.5
+  high_temperature: 1.5
+  low_temperature: 1.5
+  units: MyString

@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_08_175746) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_08_182348) do
+  create_table "forecasts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "weather_location_id", null: false
+    t.datetime "forecast_at"
+    t.string "weather_description"
+    t.string "weather_icon"
+    t.float "current_temperature"
+    t.float "high_temperature"
+    t.float "low_temperature"
+    t.string "units"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["weather_location_id"], name: "index_forecasts_on_weather_location_id"
+  end
+
   create_table "weather_locations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "address"
     t.float "latitude"
@@ -26,4 +40,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_08_175746) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "forecasts", "weather_locations"
 end
