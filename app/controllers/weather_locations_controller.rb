@@ -25,6 +25,15 @@ class WeatherLocationsController < ApplicationController
 
     respond_to do |format|
       if @weather_location.save
+        previous_results = WeatherLocation.where(postal_code: @weather_location.postal_code, date_checked: ((DateTime.now - (30.0/(60*24)))..DateTime.now)) if @weather_location.postal_code.present?
+        if previous_results.present?
+          Rails.logger.warn 'CACHE'
+          format.html { redirect_to weather_location_url(previous_results[0]), notice: "Weather location fetched from cache." }
+        end
+        Rails.logger.warn 'not CACHE'
+        OpenWeatherApi.fetch_weather!(@weather_location)
+        @weather_location.reload
+        OpenWeatherApi.fetch_forecast!(@weather_location)
         format.html { redirect_to weather_location_url(@weather_location), notice: "Weather location was successfully created." }
         format.json { render :show, status: :created, location: @weather_location }
       else
