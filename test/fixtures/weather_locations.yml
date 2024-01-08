@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  address: MyText
+  latitude: 1.5
+  longitude: 1.5
+  postal_code: MyString
+  weather_description: MyString
+  current_temperature: 1.5
+  high_temperature: 1.5
+  low_temperature: 1.5
+  units: MyString
+  date_checked: 2024-01-08 09:57:46
+
+two:
+  address: MyText
+  latitude: 1.5
+  longitude: 1.5
+  postal_code: MyString
+  weather_description: MyString
+  current_temperature: 1.5
+  high_temperature: 1.5
+  low_temperature: 1.5
+  units: MyString
+  date_checked: 2024-01-08 09:57:46
