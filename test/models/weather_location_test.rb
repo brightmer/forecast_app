@@ -19,7 +19,37 @@
 require "test_helper"
 
 class WeatherLocationTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  def test_save_with_valid_address_geocodes_data
+    location = WeatherLocation.new(address: '1600 Pennsylvania Avenue NW, Washington, DC 20500')
+    assert_nil location.postal_code
+    assert_nil location.latitude
+    assert_nil location.longitude
+
+    assert location.save
+
+    assert_equal '20500', location.postal_code
+    assert_equal 38.897699700000004, location.latitude
+    assert_equal -77.03655315, location.longitude
+  end
+
+  def test_save_with_no_address_fails
+    location = WeatherLocation.new
+    assert_nil location.postal_code
+    assert_nil location.latitude
+    assert_nil location.longitude
+
+    refute location.save
+  end
+
+  def test_delete_weather_location_removes_all_forecasts
+    location = WeatherLocation.new(address: '1600 Pennsylvania Avenue NW, Washington, DC 20500')
+
+    assert_difference 'Forecast.count', 5 do
+      5.times{ |_| location.forecasts << Forecast.create(weather_location: location) }
+    end
+
+    assert_difference 'Forecast.count', -5 do
+      location.destroy
+    end
+  end
 end

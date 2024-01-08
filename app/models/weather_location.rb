@@ -18,4 +18,15 @@
 #
 class WeatherLocation < ApplicationRecord
   has_many :forecasts, dependent: :delete_all
+
+  after_validation :geocode
+  validates :address, presence: true
+
+  geocoded_by :address do |obj, results|
+    if geo = results.first
+      obj.postal_code = geo.postal_code
+      obj.latitude = geo.latitude
+      obj.longitude = geo.longitude
+    end
+  end
 end
