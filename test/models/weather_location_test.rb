@@ -20,16 +20,28 @@ require "test_helper"
 
 class WeatherLocationTest < ActiveSupport::TestCase
   def test_save_with_valid_address_geocodes_data
-    location = WeatherLocation.new(address: '1600 Pennsylvania Avenue NW, Washington, DC 20500')
-    assert_nil location.postal_code
-    assert_nil location.latitude
-    assert_nil location.longitude
+    VCR.use_cassette("geocoded_white_house") do
+      location = WeatherLocation.new(address: '1600 Pennsylvania Avenue NW, Washington, DC 20500')
+      assert_nil location.postal_code
+      assert_nil location.latitude
+      assert_nil location.longitude
 
-    assert location.save
+      assert location.save
 
-    assert_equal '20500', location.postal_code
-    assert_equal 38.897699700000004, location.latitude
-    assert_equal -77.03655315, location.longitude
+      # set via geocoding
+      assert_equal '20500', location.postal_code
+      assert_equal 38.897699700000004, location.latitude
+      assert_equal -77.03655315, location.longitude
+
+      # set via api call
+      assert_equal -77.03655315, location.longitude
+      assert_equal  "scattered clouds", location.weather_description
+      assert_equal  47.52, location.current_temperature
+      assert_equal  45.05, location.high_temperature
+      assert_equal  49.98, location.low_temperature
+      assert_equal  "imperial", location.units
+      assert_equal Time.at(1704741681).to_datetime, location.date_checked
+    end
   end
 
   def test_save_with_no_address_fails
@@ -42,14 +54,16 @@ class WeatherLocationTest < ActiveSupport::TestCase
   end
 
   def test_delete_weather_location_removes_all_forecasts
-    location = WeatherLocation.new(address: '1600 Pennsylvania Avenue NW, Washington, DC 20500')
+    VCR.use_cassette("geocoded_white_house") do
+      location = WeatherLocation.new(address: '1600 Pennsylvania Avenue NW, Washington, DC 20500')
 
-    assert_difference 'Forecast.count', 5 do
-      5.times{ |_| location.forecasts << Forecast.create(weather_location: location) }
-    end
+      assert_difference 'Forecast.count', 5 do
+        5.times{ |_| location.forecasts << Forecast.create(weather_location: location) }
+      end
 
-    assert_difference 'Forecast.count', -5 do
-      location.destroy
+      assert_difference 'Forecast.count', -5 do
+        location.destroy
+      end
     end
   end
 end
