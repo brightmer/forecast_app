@@ -28,14 +28,16 @@ class WeatherLocationsController < ApplicationController
         previous_results = WeatherLocation.where(postal_code: @weather_location.postal_code, date_checked: ((DateTime.now - (30.0/(60*24)))..DateTime.now)) if @weather_location.postal_code.present?
         if previous_results.present?
           Rails.logger.warn 'CACHE'
-          format.html { redirect_to weather_location_url(previous_results[0]), notice: "Weather location fetched from cache." }
+          @weather_location.destroy
+          format.html { redirect_to weather_location_url(previous_results[0]), notice: "Weather fetched from cache!" }
+        else
+          Rails.logger.warn 'not CACHE'
+          OpenWeatherApi.fetch_weather!(@weather_location)
+          @weather_location.reload
+          OpenWeatherApi.fetch_forecast!(@weather_location)
+          format.html { redirect_to weather_location_url(@weather_location), notice: "Weather location was successfully created." }
+          format.json { render :show, status: :created, location: @weather_location }
         end
-        Rails.logger.warn 'not CACHE'
-        OpenWeatherApi.fetch_weather!(@weather_location)
-        @weather_location.reload
-        OpenWeatherApi.fetch_forecast!(@weather_location)
-        format.html { redirect_to weather_location_url(@weather_location), notice: "Weather location was successfully created." }
-        format.json { render :show, status: :created, location: @weather_location }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @weather_location.errors, status: :unprocessable_entity }
