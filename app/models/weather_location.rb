@@ -20,7 +20,6 @@ class WeatherLocation < ApplicationRecord
   has_many :forecasts, dependent: :delete_all
 
   after_validation :geocode
-  #after_save :fetch_forecast, :if => lambda{ |obj| obj.latitude.present? || obj.longitude.present? }
   validates :address, presence: true
 
   geocoded_by :address do |obj, results|
