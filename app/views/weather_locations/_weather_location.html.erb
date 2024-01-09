@@ -1,52 +1,7 @@
 <div id="<%= dom_id weather_location %>">
-  <p>
-    <strong>Address:</strong>
-    <%= weather_location.address %>
-  </p>
-
-  <p>
-    <strong>Latitude:</strong>
-    <%= weather_location.latitude %>
-  </p>
-
-  <p>
-    <strong>Longitude:</strong>
-    <%= weather_location.longitude %>
-  </p>
-
-  <p>
-    <strong>Postal code:</strong>
-    <%= weather_location.postal_code %>
-  </p>
-
-  <p>
-    <strong>Weather description:</strong>
-    <%= weather_location.weather_description %>
-  </p>
-
-  <p>
-    <strong>Current temperature:</strong>
-    <%= weather_location.current_temperature %>
-  </p>
-
-  <p>
-    <strong>High temperature:</strong>
-    <%= weather_location.high_temperature %>
-  </p>
-
-  <p>
-    <strong>Low temperature:</strong>
-    <%= weather_location.low_temperature %>
-  </p>
-
-  <p>
-    <strong>Units:</strong>
-    <%= weather_location.units %>
-  </p>
-
-  <p>
-    <strong>Date checked:</strong>
-    <%= weather_location.date_checked %>
-  </p>
-
+  <h4>
+    <a>Current conditions for <strong><%= weather_location.address %></strong></a><br>
+    <a>Postal code: <strong><%= weather_location.postal_code %></strong></a><br>
+    <a><%= weather_location.weather_description %> and a temperature of <%= weather_location.current_temperature %>°F at <%= weather_location.date_checked.to_fs(:long_ordinal) %></a>
+  </h4>
 </div>

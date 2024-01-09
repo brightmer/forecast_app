@@ -1,10 +1,38 @@
 <p style="color: green"><%= notice %></p>
-
-<%= render @weather_location %>
-
-<div>
-  <%= link_to "Edit this weather location", edit_weather_location_path(@weather_location) %> |
-  <%= link_to "Back to weather locations", weather_locations_path %>
-
-  <%= button_to "Destroy this weather location", @weather_location, method: :delete %>
+<div class="row">
+  <div class="col-10">
+    <%= render @weather_location %>
+  </div>
+  <div class="col-2">
+    <div class="btn-group-vertical" role="toolbar">
+      <%= link_to "Back", weather_locations_path, class: "btn btn-primary" %>
+      <%= button_to "Delete", @weather_location, method: :delete, class: "btn btn-danger mt-2" %>
+    </div>
+  </div>
 </div>
+<% if @weather_location.forecasts.size > 0 %>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Checked At</th>
+      <th scope="col">Temperature °F</th>
+      <th scope="col">High Temp. °F</th>
+      <th scope="col">Low Temp. °F</th>
+      <th scope="col">Description</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <% @weather_location.forecasts.each do |forecast| %>
+      <tr>
+        <td><%= forecast.forecast_at.to_fs(:long_ordinal) %></td>
+        <td><%= forecast.current_temperature %></td>
+        <td><%= forecast.high_temperature %></td>
+        <td><%= forecast.low_temperature %></td>
+        <td><%= forecast.weather_description %> <%= image_tag "http://openweathermap.org/img/wn/#{forecast.weather_icon}.png" %></td>
+      </tr>
+
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -1,14 +1,40 @@
 <p style="color: green"><%= notice %></p>
+<div class="flex justify-center p-24 bg-gray-100">
+    <h2>Weather Checker</h2>
+    <%= render "form", weather_location: WeatherLocation.new %>
+    <br>
+  <% if @weather_locations.size > 0 %>
+    <h3>Previously Checked Addresses</h3>
 
-<h1>Weather locations</h1>
+    <div id="prev_weather_locations">
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">Postal Code</th>
+          <th scope="col">Checked At</th>
+          <th scope="col">Temperature °F</th>
+          <th scope="col">High Temp. °F</th>
+          <th scope="col">Low Temp. °F</th>
+          <th scope="col">Description</th>
+          <th scope="col"></th>
 
-<div id="weather_locations">
-  <% @weather_locations.each do |weather_location| %>
-    <%= render weather_location %>
-    <p>
-      <%= link_to "Show this weather location", weather_location %>
-    </p>
+        </tr>
+        </thead>
+        <tbody>
+        <% @weather_locations.each do |weather_location| %>
+          <tr>
+            <td><%= weather_location.postal_code %></td>
+            <td><%= weather_location.date_checked.to_fs(:long_ordinal) %></td>
+            <td><%= weather_location.current_temperature %></td>
+            <td><%= weather_location.high_temperature %></td>
+            <td><%= weather_location.low_temperature %></td>
+            <td><%= weather_location.weather_description %></td>
+            <td><%= link_to "View", weather_location, class: "btn btn-primary" %></td>
+          </tr>
+        <% end %>
+
+        </tbody>
+      </table>
+    </div>
   <% end %>
 </div>
-
-<%= link_to "New weather location", new_weather_location_path %>
