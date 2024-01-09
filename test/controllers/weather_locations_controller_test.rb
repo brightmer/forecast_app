@@ -16,16 +16,14 @@ class WeatherLocationsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create weather_location" do
-    #VCR.use_cassette("geocode_one") do
-      VCR.use_cassette("should_create_weather_location") do
-        VCR.use_cassette("should_create_weather_location_forecast") do
-          assert_difference("WeatherLocation.count") do
-            post weather_locations_url, params: { weather_location: { address: '1'} }
-          end
+    VCR.use_cassette("should_create_weather_location") do
+      VCR.use_cassette("should_create_weather_location_forecast") do
+        assert_difference("WeatherLocation.count") do
+          post weather_locations_url, params: { weather_location: { address: '1'} }
         end
-        assert_redirected_to weather_location_url(WeatherLocation.last)
       end
-    #end
+      assert_redirected_to weather_location_url(WeatherLocation.last)
+    end
   end
 
   test "should show weather_location" do
@@ -57,8 +55,38 @@ class WeatherLocationsControllerTest < ActionDispatch::IntegrationTest
         end
       end
 
-
       assert_redirected_to weather_locations_url
     end
   end
+
+  test "delete weather location removes all forecasts" do
+    VCR.use_cassette("geocoded_white_house") do
+      VCR.use_cassette("geocoded_white_house_forecast") do
+        assert_difference 'Forecast.count', 40 do
+          post weather_locations_url, params: { weather_location: { address:  '1600 Pennsylvania Avenue NW, Washington, DC 20500'} }
+        end
+
+        assert_difference 'Forecast.count', -1 do
+          delete weather_location_url(@weather_location)
+        end
+      end
+    end
+  end
+
+  test "cached weather location is used for recent forecasts" do
+    VCR.use_cassette("geocoded_white_house") do
+      VCR.use_cassette("geocoded_white_house_forecast") do
+        assert_difference 'Forecast.count', 40 do
+          post weather_locations_url, params: { weather_location: { address:  '1600 Pennsylvania Avenue NW, Washington, DC 20500'} }
+        end
+      end
+    end
+    WeatherLocation.last.update_attribute(:date_checked, (DateTime.now - (15.0/(60*24))))# 15 minutes ago
+    VCR.use_cassette("geocoded_white_house") do
+      assert_no_difference 'Forecast.count' do
+        post weather_locations_url, params: { weather_location: { address:  '1600 Pennsylvania Avenue NW, Washington, DC 20500'} }
+      end
+    end
+  end
+
 end
