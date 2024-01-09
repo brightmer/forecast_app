@@ -19,8 +19,8 @@ class OpenWeatherApi
             data = JSON.parse(response.body)
             location.date_checked = time_to_datetime(data["dt"])
             location.current_temperature = data["main"]["temp"].to_f if data["main"]["temp"]
-            location.high_temperature = data["main"]["temp_min"].to_f if data["main"]["temp_min"]
-            location.low_temperature = data["main"]["temp_max"].to_f if data["main"]["temp_max"]
+            location.high_temperature = data["main"]["temp_max"].to_f if data["main"]["temp_max"]
+            location.low_temperature = data["main"]["temp_min"].to_f if data["main"]["temp_min"]
             location.weather_description = data["weather"][0]["description"]
             location.units = 'imperial'
           else
@@ -48,8 +48,8 @@ class OpenWeatherApi
               weather_location: location,
               current_temperature: w["main"]["temp"].to_f,
               forecast_at: time_to_datetime(w["dt"]),
-              high_temperature: w["main"]["temp_min"].to_f,
-              low_temperature: w["main"]["temp_max"].to_f,
+              high_temperature: w["main"]["temp_max"].to_f,
+              low_temperature: w["main"]["temp_min"].to_f,
               units: 'imperial',
               weather_description: w["weather"][0]["description"],
               weather_icon: w["weather"][0]["icon"]
